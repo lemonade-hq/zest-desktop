@@ -149,10 +149,11 @@ const CreateApiSpec = ({ onClose }) => {
       const filename = `${values.apiSpecName}${apiSpecExtension}`;
 
       dispatch(createApiSpecFile(filename, values.apiSpecLocation, specContent))
-        .then(() => {
+        .then(async () => {
           if (values.importFrom === API_SPEC_SOURCE.URL) {
-            // Zest: remember the URL so "Sync from source" can re-fetch it.
-            dispatch(recordApiSpecSource({ pathname: path.join(values.apiSpecLocation, filename), url: values.specUrl.trim() }));
+            // Zest: remember the URL so "Sync from source" can re-fetch it. Awaited (never throws) so the
+            // workspace entry carries its source block before the tab opens.
+            await dispatch(recordApiSpecSource({ pathname: path.join(values.apiSpecLocation, filename), url: values.specUrl.trim() }));
           }
           dispatch(openApiSpecTab({ pathname: path.join(values.apiSpecLocation, filename), filename }));
           toast.success('ApiSpec created');
