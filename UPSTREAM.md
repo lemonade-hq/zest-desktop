@@ -35,7 +35,7 @@ Conflicts are expected here.
 |---|---|---|
 | `packages/bruno-electron/electron-builder-config.js` | appId, productName, Bruno's signing identity removed, `ZEST_MAC_TARGETS` / `ZEST_MAC_ARCH` knobs | bootstrap |
 | `packages/bruno-electron/package.json` | `name: zest`, `@lemonade-hq/zest-core` dependency | bootstrap |
-| `packages/bruno-electron/notarize.js` | appId; no-op without `APPLE_ID` | bootstrap |
+| `packages/bruno-electron/notarize.js` | appId; no-op without `APPLE_ID` + `APPLE_TEAM_ID` | bootstrap |
 | `packages/bruno-electron/src/index.js` | window title | bootstrap |
 | `packages/bruno-electron/src/app/about-bruno.js`, `menu-template.js` | about text and menu label | bootstrap |
 | `packages/bruno-app/rsbuild.config.mjs` | page / window title | bootstrap |

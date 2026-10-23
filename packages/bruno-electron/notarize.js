@@ -8,8 +8,8 @@ const notarize = async function (params) {
     return;
   }
 
-  if (!process.env.APPLE_ID) {
-    console.log('APPLE_ID not set, skipping notarization');
+  if (!process.env.APPLE_ID || !process.env.APPLE_TEAM_ID) {
+    console.log('APPLE_ID / APPLE_TEAM_ID not set, skipping notarization');
     return;
   }
 
@@ -22,7 +22,7 @@ const notarize = async function (params) {
   }
 
   console.log(`Notarizing ${appId} found at ${appPath} using Apple ID ${process.env.APPLE_ID}`);
-  const teamId = 'W7LPPWA48L';
+  const teamId = process.env.APPLE_TEAM_ID;
   try {
     await electron_notarize.notarize({
       tool: 'notarytool',
