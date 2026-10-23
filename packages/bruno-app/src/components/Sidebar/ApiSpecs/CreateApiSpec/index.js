@@ -7,6 +7,7 @@ import Modal from 'components/Modal';
 import Portal from 'components/Portal';
 import { browseDirectory } from 'providers/ReduxStore/slices/collections/actions';
 import { createApiSpecFile, openApiSpecTab } from 'providers/ReduxStore/slices/apiSpec';
+import { recordApiSpecSource } from 'utils/zest/api-spec-source';
 import { exportApiSpec } from 'utils/exporters/openapi-spec';
 import path from 'utils/common/path';
 import { validateName, validateNameError } from 'utils/common/regex';
@@ -32,7 +33,7 @@ import {
 const CreateApiSpec = ({ onClose }) => {
   const sourceRadios = [
     { id: 'api-spec-source-blank', value: API_SPEC_SOURCE.BLANK, label: 'Blank Spec' },
-    { id: 'api-spec-source-collection', value: API_SPEC_SOURCE.COLLECTION, label: 'Bruno Collection' },
+    { id: 'api-spec-source-collection', value: API_SPEC_SOURCE.COLLECTION, label: 'Zest Collection' },
     { id: 'api-spec-source-url', value: API_SPEC_SOURCE.URL, label: 'Spec URL' }
   ];
 
@@ -148,7 +149,12 @@ const CreateApiSpec = ({ onClose }) => {
       const filename = `${values.apiSpecName}${apiSpecExtension}`;
 
       dispatch(createApiSpecFile(filename, values.apiSpecLocation, specContent))
-        .then(() => {
+        .then(async () => {
+          if (values.importFrom === API_SPEC_SOURCE.URL) {
+            // Zest: remember the URL so "Sync from source" can re-fetch it. Awaited (never throws) so the
+            // workspace entry carries its source block before the tab opens.
+            await dispatch(recordApiSpecSource({ pathname: path.join(values.apiSpecLocation, filename), url: values.specUrl.trim() }));
+          }
           dispatch(openApiSpecTab({ pathname: path.join(values.apiSpecLocation, filename), filename }));
           toast.success('ApiSpec created');
           if (exportWarnings.length) {

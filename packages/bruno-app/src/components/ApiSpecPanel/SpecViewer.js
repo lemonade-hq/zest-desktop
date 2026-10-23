@@ -50,6 +50,7 @@ const MIN_RIGHT_PANE_WIDTH = 450;
  *                          confirmation). Falls back to `content` when there is no draft.
  *  - onDraftChange         (fn)      Receives every edit. Required unless `readOnly`, because the
  *                          editor holds no content of its own.
+ *  - onNewRequestFromOperation (fn)  Zest: `(method, path)`; shows a "New request" button per operation.
  */
 const SpecViewer = ({
   content,
@@ -59,7 +60,8 @@ const SpecViewer = ({
   leftPaneWidth,
   onLeftPaneWidthChange,
   draftContent,
-  onDraftChange
+  onDraftChange,
+  onNewRequestFromOperation
 }) => {
   const { displayedTheme, theme } = useTheme();
   const preferences = useSelector((state) => state.app.preferences);
@@ -171,7 +173,7 @@ const SpecViewer = ({
         ) : (
           <>
             <div style={{ visibility: swaggerReady ? 'visible' : 'hidden', height: '100%' }}>
-              <Swagger spec={resolvedSpec || content} onComplete={handleSwaggerComplete} />
+              <Swagger spec={resolvedSpec || content} onComplete={handleSwaggerComplete} onNewRequest={onNewRequestFromOperation} />
             </div>
             {!swaggerReady && (
               <div

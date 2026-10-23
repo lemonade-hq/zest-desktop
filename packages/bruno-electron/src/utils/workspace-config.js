@@ -4,6 +4,7 @@ const yaml = require('js-yaml');
 const { writeFile, validateName, isValidCollectionDirectory } = require('./filesystem');
 const { generateUidBasedOnHash } = require('./common');
 const { withLock, getWorkspaceLockKey } = require('./workspace-lock');
+const { sanitizeApiSpecSource, apiSpecSourceToYamlLines } = require('../zest/api-spec-source');
 
 // Normalize Windows backslash paths to forward slashes for cross-platform compatibility.
 const posixifyPath = (p) => (p ? p.replace(/\\/g, '/') : p);
@@ -121,10 +122,18 @@ const sanitizeSpecs = (specs) => {
       return false;
     }
     return true;
-  }).map((spec) => ({
-    name: spec.name.trim(),
-    path: posixifyPath(spec.path.trim())
-  }));
+  }).map((spec) => {
+    const sanitized = {
+      name: spec.name.trim(),
+      path: posixifyPath(spec.path.trim())
+    };
+    // Zest: optional sync source stored with the spec (see src/zest/api-spec-source.js)
+    const source = sanitizeApiSpecSource(spec.source);
+    if (source) {
+      sanitized.source = source;
+    }
+    return sanitized;
+  });
 };
 
 const makeRelativePath = (workspacePath, absolutePath) => {
@@ -265,6 +274,9 @@ const generateYamlContent = (config) => {
     for (const spec of specs) {
       yamlLines.push(`  - name: ${quoteYamlValue(spec.name)}`);
       yamlLines.push(`    path: ${quoteYamlValue(spec.path)}`);
+      if (spec.source) {
+        yamlLines.push(...apiSpecSourceToYamlLines(spec.source, '    ', quoteYamlValue));
+      }
     }
   } else {
     yamlLines.push('specs:');
@@ -643,6 +655,12 @@ const addApiSpecToWorkspace = async (workspacePath, apiSpec) => {
     const existingIndex = config.specs.findIndex(
       (a) => a.name === normalizedSpec.name || (a.path && posixifyPath(a.path) === normalizedSpec.path)
     );
+
+    // Zest: keep the spec's sync source; a re-add without one keeps the existing source
+    const source = apiSpec.source || (existingIndex >= 0 ? config.specs[existingIndex].source : null);
+    if (source) {
+      normalizedSpec.source = source;
+    }
 
     if (existingIndex >= 0) {
       config.specs[existingIndex] = normalizedSpec;

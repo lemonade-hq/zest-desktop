@@ -14,7 +14,8 @@ module.exports = [
       { file: packageJson.module, format: 'esm', sourcemap: true }
     ],
     plugins: [
-      peerDepsExternal({ includeDependencies: true }),
+      // typebox is bundled, not external: it ships ESM-only, and bruno-electron require()s this CJS build.
+      peerDepsExternal(),
       nodeResolve(),
       commonjs(),
       typescript({ tsconfig: './tsconfig.json', include: ['src/**/*'], exclude: ['src/**/*.spec.ts'] }),

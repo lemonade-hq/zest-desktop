@@ -2,11 +2,12 @@ import { openApiSpecTab } from 'providers/ReduxStore/slices/apiSpec';
 import MenuDropdown from 'ui/MenuDropdown';
 import ActionIcon from 'ui/ActionIcon';
 import { useSidebarAccordion } from 'components/Sidebar/SidebarAccordionContext';
-import { IconDots, IconX } from '@tabler/icons';
+import { IconDots, IconRefresh, IconX } from '@tabler/icons';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CloseApiSpec from '../CloseApiSpec/index';
 import { isApiSpecTabForPathname } from 'utils/api-specs';
+import { describeApiSpecStaleness, syncApiSpecFromSource } from 'utils/zest/api-spec-source';
 
 const ApiSpecItem = ({ apiSpec }) => {
   const dispatch = useDispatch();
@@ -31,7 +32,17 @@ const ApiSpecItem = ({ apiSpec }) => {
     openApiSpec();
   };
 
+  const staleMessage = describeApiSpecStaleness(apiSpec);
+
   const menuItems = [
+    ...(apiSpec?.source?.url
+      ? [{
+          id: 'sync-from-source',
+          leftSection: IconRefresh,
+          label: 'Sync from source',
+          onClick: () => dispatch(syncApiSpecFromSource(apiSpec))
+        }]
+      : []),
     {
       id: 'remove',
       leftSection: IconX,
@@ -61,6 +72,11 @@ const ApiSpecItem = ({ apiSpec }) => {
           <span className="flex-nowrap whitespace-nowrap overflow-ellipsis overflow-hidden w-full">
             {apiSpec?.name}
           </span>
+          {staleMessage && (
+            <span className="api-spec-stale-pill ml-1 mr-1 flex-shrink-0" title={staleMessage} data-testid="api-spec-stale-pill">
+              stale
+            </span>
+          )}
         </div>
         <div className="pr-2">
           <MenuDropdown

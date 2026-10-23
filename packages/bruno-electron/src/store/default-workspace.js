@@ -172,6 +172,15 @@ class DefaultWorkspaceManager {
     }
   }
 
+  // Zest: preload the Lemonade public-apis API Spec and start launch-time syncs (ipc/zest-api-specs.js).
+  async runZestHooks(workspacePath) {
+    try {
+      await require('../ipc/zest-api-specs').onDefaultWorkspaceReady(workspacePath);
+    } catch (error) {
+      console.error('Zest default workspace hooks failed:', error);
+    }
+  }
+
   async ensureDefaultWorkspaceExists() {
     if (this.initializationPromise) {
       return this.initializationPromise;
@@ -182,6 +191,7 @@ class DefaultWorkspaceManager {
     // Case 1: Valid workspace exists at stored path
     if (this.isValidDefaultWorkspace(existingPath)) {
       this.defaultWorkspacePath = existingPath;
+      await this.runZestHooks(existingPath);
       return {
         workspacePath: existingPath,
         workspaceUid: this.getDefaultWorkspaceUid()
@@ -195,6 +205,7 @@ class DefaultWorkspaceManager {
           const latestValid = this.findLatestValidWorkspace();
           if (latestValid) {
             await this.setDefaultWorkspacePath(latestValid);
+            await this.runZestHooks(latestValid);
             return { workspacePath: latestValid, workspaceUid: this.getDefaultWorkspaceUid() };
           }
         }
@@ -209,6 +220,7 @@ class DefaultWorkspaceManager {
           migrateFromPreferences: shouldMigrate,
           recoveredData
         });
+        await this.runZestHooks(newWorkspacePath);
 
         return {
           workspacePath: newWorkspacePath,
