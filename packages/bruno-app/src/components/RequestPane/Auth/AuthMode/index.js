@@ -6,6 +6,7 @@ import StatusBadge from 'ui/StatusBadge/index';
 import { useDispatch } from 'react-redux';
 import { updateRequestAuthMode } from 'providers/ReduxStore/slices/collections';
 import { humanizeRequestAuthMode } from 'utils/collections';
+import ProductionBadge from 'components/RequestPane/Auth/LemonadePartnerAuth/ProductionBadge';
 import StyledWrapper from './StyledWrapper';
 
 const AuthMode = ({ item, collection }) => {
@@ -64,6 +65,11 @@ const AuthMode = ({ item, collection }) => {
       onClick: () => onModeChange('wsse')
     },
     {
+      id: 'lemonade-partner',
+      label: 'Lemonade Partner',
+      onClick: () => onModeChange('lemonade-partner')
+    },
+    {
       id: 'apikey',
       label: 'API Key',
       onClick: () => onModeChange('apikey')
@@ -108,6 +114,12 @@ const AuthMode = ({ item, collection }) => {
           </div>
         </MenuDropdown>
       </div>
+      <ProductionBadge
+        authMode={authMode}
+        auth={item.draft ? get(item, 'draft.request.auth') : get(item, 'request.auth')}
+        collection={collection}
+        item={item}
+      />
     </StyledWrapper>
   );
 };

@@ -4,6 +4,7 @@ import BearerAuth from '../BearerAuth';
 import BasicAuth from '../BasicAuth';
 import DigestAuth from '../DigestAuth';
 import WsseAuth from '../WsseAuth';
+import LemonadePartnerAuth from '../LemonadePartnerAuth';
 import NTLMAuth from '../NTLMAuth';
 import OAuth1 from '../OAuth1';
 import ApiKeyAuth from '../ApiKeyAuth';
@@ -37,6 +38,9 @@ const AuthFields = ({ authMode, collection, item, request, save, updateAuth, dis
     }
     case 'oauth2': {
       return <OAuth2 {...authProps} />;
+    }
+    case 'lemonade-partner': {
+      return <LemonadePartnerAuth {...authProps} />;
     }
     case 'wsse': {
       return <WsseAuth {...authProps} />;

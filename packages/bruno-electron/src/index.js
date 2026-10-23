@@ -50,6 +50,7 @@ const registerSystemMonitorIpc = require('./ipc/system-monitor');
 const registerWorkspaceIpc = require('./ipc/workspace');
 const registerApiSpecIpc = require('./ipc/apiSpec');
 const registerZestApiSpecIpc = require('./ipc/zest-api-specs');
+const registerZestIpc = require('./ipc/zest');
 const registerGitIpc = require('./ipc/git');
 const registerOpenAPISyncIpc = require('./ipc/openapi-sync');
 const registerMockServerIpc = require('./ipc/mock-server');
@@ -537,6 +538,7 @@ app.on('ready', async () => {
   registerWorkspaceIpc(mainWindow, workspaceWatcher);
   registerApiSpecIpc(mainWindow, apiSpecWatcher);
   registerZestApiSpecIpc(mainWindow);
+  registerZestIpc();
   registerNotificationsIpc(mainWindow, collectionWatcher);
   registerFilesystemIpc(mainWindow);
   registerSystemMonitorIpc(mainWindow, systemMonitor);

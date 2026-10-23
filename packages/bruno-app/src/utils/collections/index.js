@@ -494,6 +494,12 @@ export const transformCollectionToSaveToExportAsFile = (collection, options = {}
               placement: get(si.request, 'auth.apikey.placement', 'header')
             };
             break;
+          case 'lemonade-partner':
+            di.request.auth.lemonadePartner = {
+              env: get(si.request, 'auth.lemonadePartner.env', ''),
+              partnerPublicId: get(si.request, 'auth.lemonadePartner.partnerPublicId', '')
+            };
+            break;
           case 'wsse':
             di.request.auth.wsse = {
               username: get(si.request, 'auth.wsse.username', ''),
@@ -1043,6 +1049,10 @@ export const humanizeRequestAuthMode = (mode) => {
     }
     case 'oauth2': {
       label = 'OAuth 2.0';
+      break;
+    }
+    case 'lemonade-partner': {
+      label = 'Lemonade Partner';
       break;
     }
     case 'wsse': {

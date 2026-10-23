@@ -12,6 +12,7 @@ import GrantTypeSelector from 'components/RequestPane/Auth/OAuth2/GrantTypeSelec
 import OAuth2Implicit from 'components/RequestPane/Auth/OAuth2/Implicit/index';
 import OAuth2PasswordCredentials from 'components/RequestPane/Auth/OAuth2/PasswordCredentials/index';
 import WsseAuth from 'components/RequestPane/Auth/WsseAuth';
+import LemonadePartnerAuth from 'components/RequestPane/Auth/LemonadePartnerAuth';
 import get from 'lodash/get';
 import { updateFolderAuth as _updateFolderAuth } from 'providers/ReduxStore/slices/collections';
 import { saveFolderRoot } from 'providers/ReduxStore/slices/collections/actions';
@@ -119,6 +120,17 @@ const Auth = ({ collection, folder }) => {
       case 'oauth1': {
         return (
           <OAuth1
+            collection={collection}
+            item={folder}
+            updateAuth={updateFolderAuth}
+            request={request}
+            save={() => handleSave()}
+          />
+        );
+      }
+      case 'lemonade-partner': {
+        return (
+          <LemonadePartnerAuth
             collection={collection}
             item={folder}
             updateAuth={updateFolderAuth}

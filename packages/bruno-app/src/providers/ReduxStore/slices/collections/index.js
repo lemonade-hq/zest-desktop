@@ -24,6 +24,7 @@ import mime from 'mime-types';
 import path from 'utils/common/path';
 import { getUniqueTagsFromItems } from 'utils/collections/index';
 import { DEFAULT_HTTP_ITEM_SETTINGS, GRPC_SCRIPT_KEYS, SCRIPT_TYPES } from '@usebruno/common';
+import { LEMONADE_PARTNER_DEFAULTS } from 'utils/common/constants';
 import * as exampleReducers from './exampleReducers';
 import * as mockResponseEditorReducers from './mockResponseEditorReducers';
 
@@ -193,6 +194,10 @@ const mergeRequestWithPreservedUids = (existingRequest, newRequest) =>
 
 const mergeRootWithPreservedUids = (existingRoot, newRoot) =>
   preserveUidsAtPaths(existingRoot, newRoot, ROOT_UID_PATHS);
+
+// Zest: a freshly picked Lemonade Partner auth starts with {{env}} / {{partnerPublicId}}.
+const withAuthModeDefaults = (auth) =>
+  auth.mode === 'lemonade-partner' ? { ...auth, lemonadePartner: { ...LEMONADE_PARTNER_DEFAULTS } } : auth;
 
 const initialState = {
   collections: [],
@@ -1286,6 +1291,10 @@ export const collectionsSlice = createSlice({
               item.draft.request.auth.mode = 'oauth2';
               item.draft.request.auth.oauth2 = action.payload.content;
               break;
+            case 'lemonade-partner':
+              item.draft.request.auth.mode = 'lemonade-partner';
+              item.draft.request.auth.lemonadePartner = action.payload.content;
+              break;
             case 'wsse':
               item.draft.request.auth.mode = 'wsse';
               item.draft.request.auth.wsse = action.payload.content;
@@ -1954,7 +1963,7 @@ export const collectionsSlice = createSlice({
           if (newMode === savedMode) {
             item.draft.request.auth = cloneDeep(savedAuth);
           } else {
-            item.draft.request.auth = { mode: newMode };
+            item.draft.request.auth = withAuthModeDefaults({ mode: newMode });
           }
         }
       }
@@ -2427,7 +2436,7 @@ export const collectionsSlice = createSlice({
         if (newMode === savedMode) {
           set(collection, 'draft.root.request.auth', cloneDeep(savedAuth));
         } else {
-          set(collection, 'draft.root.request.auth', { mode: newMode });
+          set(collection, 'draft.root.request.auth', withAuthModeDefaults({ mode: newMode }));
         }
       }
     },
@@ -2463,6 +2472,9 @@ export const collectionsSlice = createSlice({
             break;
           case 'oauth2':
             set(collection, 'draft.root.request.auth.oauth2', action.payload.content);
+            break;
+          case 'lemonade-partner':
+            set(collection, 'draft.root.request.auth.lemonadePartner', action.payload.content);
             break;
           case 'wsse':
             set(collection, 'draft.root.request.auth.wsse', action.payload.content);
@@ -2840,6 +2852,9 @@ export const collectionsSlice = createSlice({
             break;
           case 'awsv4':
             set(folder, 'draft.request.auth.awsv4', action.payload.content);
+            break;
+          case 'lemonade-partner':
+            set(folder, 'draft.request.auth.lemonadePartner', action.payload.content);
             break;
           case 'wsse':
             set(folder, 'draft.request.auth.wsse', action.payload.content);
@@ -3941,7 +3956,7 @@ export const collectionsSlice = createSlice({
         if (newMode === savedMode) {
           set(folder, 'draft.request.auth', cloneDeep(savedAuth));
         } else {
-          set(folder, 'draft.request.auth', { mode: newMode });
+          set(folder, 'draft.request.auth', withAuthModeDefaults({ mode: newMode }));
         }
       }
     },

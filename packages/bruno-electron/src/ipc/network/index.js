@@ -28,6 +28,8 @@ const { applyCollectionVarsToCollectionRoot } = require('./apply-collection-vars
 const { makeAxiosInstance, completeOpenHop } = require('./axios-instance');
 const { refreshExplicitHeaderNames } = require('@usebruno/common');
 const { resolveInheritedSettings } = require('../../utils/collection');
+const { getZestAuth } = require('../zest');
+const { mintPartnerBearer } = require('../../zest/partner-auth');
 const { cancelTokens, saveCancelToken, deleteCancelToken } = require('../../utils/cancel-token');
 const { uuid, safeStringifyJSON, safeParseJSON, parseDataFromResponse, parseDataFromRequest, isBinaryRequestBody } = require('../../utils/common');
 const { chooseFileToSave, writeFile, getCollectionFormat, hasRequestExtension } = require('../../utils/filesystem');
@@ -333,6 +335,12 @@ const configureRequest = async (
   if (request.edgeGridConfig) {
     addEdgeGridInterceptor(axiosInstance, request);
     delete request.edgeGridConfig;
+  }
+
+  // Zest: Lemonade Partner auth. Env and partner id are interpolated by now. The token goes only into the header.
+  if (request.lemonadePartner) {
+    request.headers['Authorization'] = await mintPartnerBearer(getZestAuth(), request.lemonadePartner);
+    delete request.lemonadePartner;
   }
 
   // Get timeout from request settings, fallback to global preference

@@ -10,6 +10,7 @@ const AUTH_TYPE_LABELS = {
   ntlm: 'NTLM',
   oauth2: 'OAuth 2.0',
   wsse: 'WSSE',
+  lemonadePartner: 'Lemonade Partner',
   apikey: 'API Key'
 };
 
@@ -25,6 +26,9 @@ const AUTH_FIELD_LABELS = {
   username: 'Username',
   password: 'Password',
   domain: 'Domain',
+  // Lemonade Partner
+  env: 'Environment',
+  partnerPublicId: 'Partner public ID',
   // Bearer
   token: 'Token',
   // API Key

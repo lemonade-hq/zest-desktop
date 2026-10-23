@@ -38,3 +38,28 @@ describe('lemonade-partner auth (yml)', () => {
     expect(reparsed.request?.auth?.lemonadePartner).toEqual({ env: 'sandbox', partnerPublicId: 'ptr_1' });
   });
 });
+
+describe('lemonade-partner auth in a request item (yml)', () => {
+  it('survives stringifyItem → parseItem', () => {
+    const stringifyItem = require('../stringifyItem').default;
+    const parseItem = require('../parseItem').default;
+    const item = {
+      name: 'Create application',
+      type: 'http-request',
+      seq: 1,
+      request: {
+        method: 'POST',
+        url: '{{publicApis}}/api/v3/fr/renters/applications',
+        headers: [],
+        params: [],
+        body: { mode: 'none' },
+        auth: { mode: 'lemonade-partner', lemonadePartner: { env: 'sandbox', partnerPublicId: 'ptr_1' } }
+      }
+    };
+    const yml = stringifyItem(item);
+    expect(yml).toContain('type: lemonade-partner');
+    const parsed = parseItem(yml);
+    expect(parsed.request.auth.mode).toBe('lemonade-partner');
+    expect(parsed.request.auth.lemonadePartner).toEqual({ env: 'sandbox', partnerPublicId: 'ptr_1' });
+  });
+});
