@@ -78,7 +78,15 @@ describe('seedPreloadedApiSpecs', () => {
     expect(readWorkspaceConfig(workspacePath).specs).toEqual([]);
   });
 
+  it('still seeds when the listed specs point at missing files', async () => {
+    writeWorkspaceYml('specs:\n  - name: gone\n    path: apispec/gone.yaml');
+    const result = await seedPreloadedApiSpecs(workspacePath, deps);
+    expect(result.seeded).toBe(true);
+  });
+
   it('skips a workspace that already has API specs', async () => {
+    fs.mkdirSync(path.join(workspacePath, 'apispec'), { recursive: true });
+    fs.writeFileSync(path.join(workspacePath, 'apispec', 'mine.yaml'), 'openapi: 3.0.0\n');
     writeWorkspaceYml('specs:\n  - name: mine\n    path: apispec/mine.yaml');
     const result = await seedPreloadedApiSpecs(workspacePath, deps);
     expect(result).toEqual({ seeded: false, reason: 'workspace-has-specs' });
