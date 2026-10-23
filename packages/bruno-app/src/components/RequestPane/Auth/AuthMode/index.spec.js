@@ -59,3 +59,14 @@ describe('RequestPane AuthMode: Lemonade Partner', () => {
     expect(screen.getByTestId('lemonade-partner-production-badge')).toBeInTheDocument();
   });
 });
+
+describe('RequestPane AuthMode: inherited Lemonade Partner', () => {
+  it('shows the production badge when the collection auth is production', () => {
+    const inheriting = {
+      ...collection,
+      root: { request: { auth: { mode: 'lemonade-partner', lemonadePartner: { env: 'production', partnerPublicId: 'p' } } } }
+    };
+    renderWithTheme(<AuthMode item={itemWith({ mode: 'inherit' })} collection={inheriting} />);
+    expect(screen.getByTestId('lemonade-partner-production-badge')).toBeInTheDocument();
+  });
+});

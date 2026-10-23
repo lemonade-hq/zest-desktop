@@ -138,7 +138,8 @@ export const LemonadePartnerFields = ({ auth, onChange, onSave, onRun, collectio
           value={selectValue}
           data-testid="lemonade-partner-env"
           onChange={(e) => {
-            if (e.target.value !== '__custom__') onChange({ ...config, env: e.target.value });
+            // "Variable…" starts from the {{env}} template; the editor below then takes over.
+            onChange({ ...config, env: e.target.value === '__custom__' ? '{{env}}' : e.target.value });
           }}
         >
           {LEMONADE_PARTNER_ENVIRONMENTS.map((env) => (

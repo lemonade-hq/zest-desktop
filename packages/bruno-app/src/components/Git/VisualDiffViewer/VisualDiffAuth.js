@@ -13,6 +13,8 @@ const AUTH_TYPE_LABELS = {
   lemonadePartner: 'Lemonade Partner',
   apikey: 'API Key'
 };
+// The mode name (`lemonade-partner`) differs from its config key (`lemonadePartner`).
+AUTH_TYPE_LABELS['lemonade-partner'] = AUTH_TYPE_LABELS.lemonadePartner;
 
 const AUTH_FIELD_LABELS = {
   // AWS v4
