@@ -1,7 +1,8 @@
-import { memo } from 'react';
+import { memo, useMemo, useRef } from 'react';
 import SwaggerUI from 'swagger-ui-react';
 import StyledWrapper from './StyledWrapper';
 import { serializeBody } from './serializeBody';
+import { createNewRequestPlugin } from './newRequestPlugin';
 
 /*
   OpenAPISec 3.1.0 resolver ignores to dereference "$refs" when document.baseURI is not http/https as the packaged app is loaded over "file:/", so every internal $ref fails with "Evaluation failed on URI".
@@ -76,7 +77,12 @@ const requestInterceptor = (req) => {
   return req;
 };
 
-const Swagger = ({ spec, onComplete }) => {
+const Swagger = ({ spec, onComplete, onNewRequest }) => {
+  // Zest: "New request" button per operation. Swagger UI reads plugins once, so they read the handler from a ref.
+  const onNewRequestRef = useRef(onNewRequest);
+  onNewRequestRef.current = onNewRequest;
+  const plugins = useMemo(() => [createNewRequestPlugin(() => onNewRequestRef.current || null)], []);
+
   return (
     <StyledWrapper>
       <div className="swagger-root w-full">
@@ -84,6 +90,7 @@ const Swagger = ({ spec, onComplete }) => {
           spec={spec}
           onComplete={onComplete}
           requestInterceptor={requestInterceptor}
+          plugins={plugins}
         />
       </div>
     </StyledWrapper>

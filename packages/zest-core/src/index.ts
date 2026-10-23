@@ -11,3 +11,7 @@ export {
   NoActiveAuthClientError,
   UpstreamError
 } from './auth/errors';
+
+// api specs
+export { filterOpenApiPaths, globToRegExp, matchesAnyGlob, PUBLIC_APIS_SPEC, PUBLIC_APIS_SNAPSHOT_ID } from './api-specs';
+export type { ApiSpecSource } from './api-specs';

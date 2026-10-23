@@ -10,6 +10,34 @@ const StyledWrapper = styled.div`
 
     .swagger-ui {
       font-family: inherit;
+
+      /* Zest: "New request" button beside each operation summary */
+      .zest-operation-summary {
+        display: flex;
+        align-items: center;
+
+        > .opblock-summary {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+      }
+
+      .zest-new-request-btn {
+        flex-shrink: 0;
+        margin: 0 8px;
+        padding: 2px 8px;
+        font-size: 12px;
+        white-space: nowrap;
+        border-radius: 4px;
+        border: 1px solid ${(props) => props.theme.border.border2};
+        background: transparent;
+        color: ${(props) => props.theme.text};
+        cursor: pointer;
+
+        &:hover {
+          border-color: ${(props) => props.theme.textLink};
+        }
+      }
       font-size: ${(props) => props.theme.font.size.base};
       color: ${(props) => props.theme.text};
 

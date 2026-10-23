@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
+import jsyaml from 'js-yaml';
 import find from 'lodash/find';
 import { IconLoader2 } from '@tabler/icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,7 +7,8 @@ import SpecViewer from 'components/ApiSpecPanel/SpecViewer';
 import StyledWrapper from 'components/ApiSpecPanel/StyledWrapper';
 import { saveApiSpecToFile, updateApiSpecDraft } from 'providers/ReduxStore/slices/apiSpec';
 import { updateApiSpecTabLeftPaneWidth } from 'providers/ReduxStore/slices/tabs';
-import { findApiSpecByPathname } from 'utils/api-specs';
+import { findApiSpecByPathname, getApiSpecPathKey } from 'utils/api-specs';
+import { useNewRequestFromOperation } from './NewRequestFromOperation';
 
 const ApiSpecTab = ({ tabUid }) => {
   const dispatch = useDispatch();
@@ -14,6 +16,22 @@ const ApiSpecTab = ({ tabUid }) => {
   const tab = useSelector((state) => find(state.tabs.tabs, (t) => t.uid === tabUid));
   const apiSpec = useSelector((state) => findApiSpecByPathname(state.apiSpec.apiSpecs, tab?.apiSpecPathname));
   const apiSpecUid = apiSpec?.uid;
+
+  // Zest: "New request" from an operation, using the spec's source block (base URL variable, auth preset).
+  const source = useSelector((state) => {
+    const workspace = state.workspaces.workspaces.find((w) => w.uid === state.workspaces.activeWorkspaceUid);
+    const key = getApiSpecPathKey(tab?.apiSpecPathname);
+    return (workspace?.apiSpecs || []).find((s) => key && getApiSpecPathKey(s.path) === key)?.source || null;
+  });
+  const parsedSpec = useMemo(() => {
+    if (apiSpec?.resolvedJson) return apiSpec.resolvedJson;
+    try {
+      return apiSpec?.raw ? jsyaml.load(apiSpec.raw) : null;
+    } catch {
+      return null;
+    }
+  }, [apiSpec?.resolvedJson, apiSpec?.raw]);
+  const newRequest = useNewRequestFromOperation({ spec: parsedSpec, source });
 
   const handleDraftChange = useCallback(
     (content) => {
@@ -55,7 +73,9 @@ const ApiSpecTab = ({ tabUid }) => {
         onDraftChange={handleDraftChange}
         leftPaneWidth={tab?.apiSpecLeftPaneWidth ?? null}
         onLeftPaneWidthChange={handleLeftPaneWidthChange}
+        onNewRequestFromOperation={parsedSpec ? newRequest.start : undefined}
       />
+      {newRequest.modal}
     </StyledWrapper>
   );
 };

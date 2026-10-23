@@ -24,6 +24,15 @@ const Wrapper = styled.div`
     ${sidebarRowStyles({ selectedClass: 'active', keyboardFocusedClass: 'api-spec-keyboard-focused', actionsClass: 'apispec-row-actions' })}
   }
 
+  .api-spec-stale-pill {
+    font-size: 10px;
+    line-height: 14px;
+    padding: 0 5px;
+    border-radius: 7px;
+    color: ${(props) => props.theme.colors.text.warning};
+    border: 1px solid ${(props) => props.theme.colors.text.warning};
+  }
+
   .placeholder {
     color: ${(props) => props.theme.colors.text.muted};
   }

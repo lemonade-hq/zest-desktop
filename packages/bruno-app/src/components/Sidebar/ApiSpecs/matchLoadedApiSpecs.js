@@ -23,7 +23,10 @@ export const matchLoadedApiSpecs = (workspaceApiSpecs, allApiSpecs) => {
     .map((ws) => {
       const wsPathKey = getApiSpecPathKey(ws?.path);
       if (!wsPathKey) return undefined;
-      return loadedApiSpecs.find((apiSpec) => getApiSpecPathKey(apiSpec?.pathname) === wsPathKey);
+      const loaded = loadedApiSpecs.find((apiSpec) => getApiSpecPathKey(apiSpec?.pathname) === wsPathKey);
+      // Zest: carry the workspace entry's source block and sync state (Sync from source, stale pill).
+      if (!loaded || !ws.source) return loaded;
+      return { ...loaded, source: ws.source, syncState: ws.syncState || null, stale: Boolean(ws.stale) };
     })
     .filter(Boolean);
 };

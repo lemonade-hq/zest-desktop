@@ -35,6 +35,7 @@ const {
 } = require('../utils/workspace-config');
 
 const DEFAULT_WORKSPACE_NAME = 'My Workspace';
+const { attachApiSpecSyncState } = require('./zest-api-specs');
 
 const prepareWorkspaceConfigForClient = (workspaceConfig, workspacePath, isDefault) => {
   const config = {
@@ -241,7 +242,8 @@ const registerWorkspaceIpc = (mainWindow, workspaceWatcher) => {
           }
           return spec;
         })
-        .filter((spec) => spec.path && fs.existsSync(spec.path));
+        .filter((spec) => spec.path && fs.existsSync(spec.path))
+        .map(attachApiSpecSyncState); // Zest: sync state / stale flag for the sidebar
 
       return resolvedSpecs;
     } catch (error) {

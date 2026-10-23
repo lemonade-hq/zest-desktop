@@ -53,3 +53,15 @@ describe('matchLoadedApiSpecs', () => {
     expect(matchLoadedApiSpecs(ws, undefined)).toEqual([]);
   });
 });
+
+describe('matchLoadedApiSpecs (Zest source block)', () => {
+  it('carries source, sync state and the stale flag onto the loaded spec', () => {
+    const source = { url: 'https://public-apis-master.lmndstaging.com/api-json', includePaths: ['/api/v3/**'] };
+    const syncState = { contentFrom: 'snapshot', error: 'offline' };
+    const result = matchLoadedApiSpecs(
+      [{ name: 'Lemonade public-apis', path: '/ws/apispec/Lemonade public-apis.json', source, syncState, stale: true }],
+      [{ uid: 'a', name: 'Lemonade public-apis', pathname: '/ws/apispec/Lemonade public-apis.json' }]
+    );
+    expect(result).toEqual([{ uid: 'a', name: 'Lemonade public-apis', pathname: '/ws/apispec/Lemonade public-apis.json', source, syncState, stale: true }]);
+  });
+});

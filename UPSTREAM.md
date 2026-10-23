@@ -46,6 +46,13 @@ Conflicts are expected here.
 | `packages/bruno-electron/src/ipc/network/prepare-request.js` | `lemonade-partner` / `lemonade-agent` auth | auth-mode tasks |
 | `packages/bruno-app/src/components/RequestPane/Auth/AuthMode/**` | new auth modes in the UI | auth-mode tasks |
 | `packages/bruno-schema/src/collections/index.js`, `packages/bruno-lang/v2/src/*.js`, `packages/bruno-filestore/src/formats/yml/common/auth.ts` | auth definitions in schema and both file formats | auth-mode tasks |
+| `packages/bruno-electron/electron-builder-config.js` | `resources/data/zest` (bundled public-apis snapshot) in `extraResources` | public-apis spec task |
+| `packages/bruno-electron/src/index.js` | registers `ipc/zest-api-specs.js` | public-apis spec task |
+| `packages/bruno-electron/src/utils/workspace-config.js` | keeps the optional `source` block of a spec entry (`src/zest/api-spec-source.js`) | public-apis spec task |
+| `packages/bruno-electron/src/ipc/workspace.js` | adds sync state / `stale` to `renderer:load-workspace-apispecs` | public-apis spec task |
+| `packages/bruno-electron/src/store/default-workspace.js` | `runZestHooks`: first-launch preload and launch-time sync | public-apis spec task |
+| `packages/bruno-app/src/components/Sidebar/ApiSpecs/**` | "Sync from source", stale pill, source URL recorded on create, "Zest" strings | public-apis spec task |
+| `packages/bruno-app/src/components/ApiSpecPanel/SpecViewer.js`, `Renderers/Swagger/index.js`, `Renderers/Swagger/StyledWrapper.js`, `components/ApiSpecTab/index.js` | "New request" button per operation | public-apis spec task |
 
 ## Kept as Bruno on purpose
 
