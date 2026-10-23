@@ -244,6 +244,13 @@ const authWsseSchema = Yup.object({
   .noUnknown(true)
   .strict();
 
+const authLemonadePartnerSchema = Yup.object({
+  env: Yup.string().nullable(),
+  partnerPublicId: Yup.string().nullable()
+})
+  .noUnknown(true)
+  .strict();
+
 const authBearerSchema = Yup.object({
   token: Yup.string().nullable()
 })
@@ -447,7 +454,7 @@ const oauth2Schema = Yup.object({
 
 const authSchema = Yup.object({
   mode: Yup.string()
-    .oneOf(['inherit', 'none', 'awsv4', 'basic', 'bearer', 'digest', 'ntlm', 'oauth1', 'oauth2', 'wsse', 'apikey', 'akamai-edgegrid'])
+    .oneOf(['inherit', 'none', 'awsv4', 'basic', 'bearer', 'digest', 'ntlm', 'oauth1', 'oauth2', 'wsse', 'apikey', 'akamai-edgegrid', 'lemonade-partner'])
     .required('mode is required'),
   awsv4: authAwsV4Schema.nullable(),
   basic: authBasicSchema.nullable(),
@@ -457,6 +464,7 @@ const authSchema = Yup.object({
   oauth1: authOAuth1Schema.nullable(),
   oauth2: oauth2Schema.nullable(),
   wsse: authWsseSchema.nullable(),
+  lemonadePartner: authLemonadePartnerSchema.nullable(),
   apikey: authApiKeySchema.nullable(),
   akamaiEdgegrid: authEdgeGridSchema.nullable()
 })

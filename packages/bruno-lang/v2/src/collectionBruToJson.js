@@ -15,7 +15,7 @@ const ANNOTATIONS_KEY = Symbol('annotations');
 
 const grammar = ohm.grammar(`Bru {
   BruFile = (meta | query | headers | auth | auths | vars | script | tests | docs)*
-  auths = authawsv4 | authbasic | authbearer | authdigest | authNTLM | authOAuth1 | authOAuth2 | authwsse | authapikey | authedgegrid | authOauth2Configs
+  auths = authawsv4 | authbasic | authbearer | authdigest | authNTLM | authOAuth1 | authOAuth2 | authwsse | authlemonadepartner | authapikey | authedgegrid | authOauth2Configs
 
   // Oauth2 additional parameters
   authOauth2Configs = oauth2AuthReqConfig | oauth2AccessTokenReqConfig | oauth2RefreshTokenReqConfig
@@ -107,6 +107,7 @@ const grammar = ohm.grammar(`Bru {
   authOAuth1 = "auth:oauth1" dictionary
   authOAuth2 = "auth:oauth2" dictionary
   authwsse = "auth:wsse" dictionary
+  authlemonadepartner = "auth:lemonade-partner" dictionary
   authapikey = "auth:apikey" dictionary
   authedgegrid = "auth:akamai-edgegrid" dictionary
   
@@ -598,6 +599,21 @@ const sem = grammar.createSemantics().addAttribute('ast', {
   oauth2RefreshTokenReqBody(_1, dictionary) {
     return {
       oauth2_additional_parameters_refresh_token_req_bodyvalues: mapPairListToKeyValPairs(dictionary.ast)
+    };
+  },
+  authlemonadepartner(_1, dictionary) {
+    const auth = mapPairListToKeyValPairs(dictionary.ast, false);
+
+    const envKey = _.find(auth, { name: 'env' });
+    const idKey = _.find(auth, { name: 'partnerPublicId' });
+
+    return {
+      auth: {
+        lemonadePartner: {
+          env: envKey ? envKey.value : '',
+          partnerPublicId: idKey ? idKey.value : ''
+        }
+      }
     };
   },
   authwsse(_1, dictionary) {

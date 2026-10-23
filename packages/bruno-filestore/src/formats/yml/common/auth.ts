@@ -27,6 +27,14 @@ interface AkamaiEdgeGridAuthValues {
   maxBodySize?: number | null;
 }
 
+// Lemonade Partner is a Zest-specific auth mode that is not part of the OpenCollection spec,
+// so its shape is defined locally.
+interface LemonadePartnerAuthValues {
+  type: 'lemonade-partner';
+  env?: string;
+  partnerPublicId?: string;
+}
+
 const buildAwsV4Auth = (config?: BrunoAuth['awsv4']): AuthAwsV4 => {
   const auth: AuthAwsV4 = { type: 'awsv4' };
 
@@ -149,6 +157,19 @@ const buildEdgeGridAuth = (config?: BrunoAuth['akamaiEdgegrid']): AkamaiEdgeGrid
   return auth;
 };
 
+const buildLemonadePartnerAuth = (config?: BrunoAuth['lemonadePartner']): LemonadePartnerAuthValues => {
+  const auth: LemonadePartnerAuthValues = { type: 'lemonade-partner' };
+
+  if (!config) {
+    return auth;
+  }
+
+  if (isString(config.env)) auth.env = config.env;
+  if (isString(config.partnerPublicId)) auth.partnerPublicId = config.partnerPublicId;
+
+  return auth;
+};
+
 const buildOAuth1Auth = (config?: BrunoAuth['oauth1']): AuthOAuth1 => {
   const auth: AuthOAuth1 = { type: 'oauth1' };
 
@@ -208,6 +229,8 @@ export const toOpenCollectionAuth = (auth?: BrunoAuth | null): Auth | undefined 
       return toOpenCollectionOAuth2(auth.oauth2);
     case 'akamai-edgegrid':
       return buildEdgeGridAuth(auth.akamaiEdgegrid) as unknown as Auth;
+    case 'lemonade-partner':
+      return buildLemonadePartnerAuth(auth.lemonadePartner) as unknown as Auth;
     default:
       console.warn(`toOpenCollectionAuth failed: Unsupported auth mode "${auth.mode}".`);
       return undefined;
@@ -225,7 +248,8 @@ export const toBrunoAuth = (auth: Auth | null | undefined): BrunoAuth | null => 
     oauth2: null,
     wsse: null,
     apikey: null,
-    akamaiEdgegrid: null
+    akamaiEdgegrid: null,
+    lemonadePartner: null
   };
 
   if (!auth) {
@@ -249,6 +273,16 @@ export const toBrunoAuth = (auth: Auth | null | undefined): BrunoAuth | null => 
       baseURL: edgegrid.baseURL || '',
       headersToSign: edgegrid.headersToSign || '',
       maxBodySize: typeof edgegrid.maxBodySize === 'number' ? edgegrid.maxBodySize : null
+    };
+    return brunoAuth;
+  }
+
+  if ((auth as unknown as LemonadePartnerAuthValues).type === 'lemonade-partner') {
+    const partner = auth as unknown as LemonadePartnerAuthValues;
+    brunoAuth.mode = 'lemonade-partner';
+    brunoAuth.lemonadePartner = {
+      env: partner.env || '',
+      partnerPublicId: partner.partnerPublicId || ''
     };
     return brunoAuth;
   }
