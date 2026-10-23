@@ -30,6 +30,7 @@ const mainLintFiles = [
   'packages/bruno-requests/**/*.ts',
   'packages/bruno-requests/**/*.js',
   'packages/bruno-tests/**/*.{js,ts}',
+  'packages/zest-core/**/*.ts',
   'packages/bruno-sqlite/**/*.{js,ts}'
 ];
 

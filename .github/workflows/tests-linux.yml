@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   unit-test:
+    if: github.repository == 'usebruno/bruno'
     name: Unit Tests (Linux)
     timeout-minutes: 60
     runs-on: 
@@ -29,6 +30,7 @@ jobs:
         uses: ./.github/actions/tests/run-unit-tests
 
   cli-test:
+    if: github.repository == 'usebruno/bruno'
     name: CLI Tests (Linux)
     runs-on: 
       - ubuntu-latest
@@ -58,6 +60,7 @@ jobs:
           check_run: false
 
   cli-test-cache-modules:
+    if: github.repository == 'usebruno/bruno'
     name: CLI Tests with experimental-cache-modules (Linux)
     runs-on:
       - ubuntu-latest
@@ -89,6 +92,7 @@ jobs:
           check_run: false
 
   e2e-test:
+    if: github.repository == 'usebruno/bruno'
     name: Playwright E2E Tests (Linux) ${{ matrix.shard }}/${{ matrix.shardTotal }}
     timeout-minutes: 240
     runs-on: 
@@ -137,7 +141,7 @@ jobs:
 
   e2e-test-report:
     name: Merge Playwright Reports (Linux)
-    if: ${{ !cancelled() }}
+    if: ${{ !cancelled() && github.repository == 'usebruno/bruno' }}
     needs: [e2e-test]
     runs-on: 
       - ubuntu-latest
@@ -168,6 +172,7 @@ jobs:
           retention-days: 30
 
   ssl-test:
+    if: github.repository == 'usebruno/bruno'
     name: SSL Tests (Linux)
     timeout-minutes: 60
     runs-on: 
@@ -205,6 +210,7 @@ jobs:
         uses: ./.github/actions/ssl/linux/run-ssl-e2e-tests
 
   oauth1-tests:
+    if: github.repository == 'usebruno/bruno'
     name: OAuth 1.0 Auth Tests (Linux)
     timeout-minutes: 60
     runs-on: 

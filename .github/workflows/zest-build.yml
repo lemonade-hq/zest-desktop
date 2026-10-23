@@ -1,0 +1,70 @@
+name: Zest Build
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node Dependencies
+        uses: ./.github/actions/common/setup-node-deps
+
+      - name: Test bruno-common
+        run: npm run test --workspace=packages/bruno-common
+
+      - name: Test bruno-lang
+        run: npm run test --workspace=packages/bruno-lang
+
+      - name: Test bruno-schema
+        run: npm run test --workspace=packages/bruno-schema
+
+      - name: Test zest-core
+        run: npm run test --workspace=packages/zest-core
+
+      - name: Test bruno-electron
+        run: npm run test:ci --workspace=packages/bruno-electron
+
+  macos-build:
+    name: macOS Build (unsigned, arm64 dmg)
+    runs-on: macos-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    env:
+      # Unsigned build: signing and notarization arrive with the release task.
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      # Narrow electron-builder-config.js to one artifact (unset = full upstream matrix).
+      ZEST_MAC_TARGETS: dmg
+      ZEST_MAC_ARCH: arm64
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node Dependencies
+        uses: ./.github/actions/common/setup-node-deps
+
+      - name: Build web app
+        run: npm run build:web
+
+      - name: Build Electron app
+        run: npm run build:electron:mac
+
+      - name: Upload dmg
+        uses: actions/upload-artifact@v4
+        with:
+          name: zest-macos-arm64
+          path: packages/bruno-electron/out/*.dmg
+          if-no-files-found: error

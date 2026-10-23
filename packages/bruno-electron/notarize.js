@@ -8,7 +8,12 @@ const notarize = async function (params) {
     return;
   }
 
-  let appId = 'com.usebruno.app';
+  if (!process.env.APPLE_ID) {
+    console.log('APPLE_ID not set, skipping notarization');
+    return;
+  }
+
+  let appId = 'com.lemonade.zest';
 
   let appPath = path.join(params.appOutDir, `${params.packager.appInfo.productFilename}.app`);
   if (!fs.existsSync(appPath)) {

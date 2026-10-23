@@ -2,9 +2,14 @@ require('dotenv').config({ path: process.env.DOTENV_PATH });
 
 const isBenchmark = process.env.BRUNO_BENCHMARK === 'true';
 
+// Zest: CI narrows the macOS build (e.g. ZEST_MAC_TARGETS=dmg ZEST_MAC_ARCH=arm64).
+// Unset, this is the full upstream matrix.
+const macTargets = (process.env.ZEST_MAC_TARGETS || 'pkg,dmg,zip').split(',');
+const macArch = (process.env.ZEST_MAC_ARCH || 'x64,arm64').split(',');
+
 const config = {
-  appId: 'com.usebruno.app',
-  productName: isBenchmark ? 'Bruno Benchmark' : 'Bruno',
+  appId: 'com.lemonade.zest',
+  productName: isBenchmark ? 'Zest Benchmark' : 'Zest',
   extraMetadata: {
     brunoBuild: {
       benchmark: isBenchmark,
@@ -27,30 +32,15 @@ const config = {
   mac: {
     artifactName: '${name}_${version}_${arch}_${os}.${ext}',
     category: 'public.app-category.developer-tools',
-    target: [
-      {
-        target: 'pkg',
-        arch: ['x64', 'arm64']
-      },
-      {
-        target: 'dmg',
-        arch: ['x64', 'arm64']
-      },
-      {
-        target: 'zip',
-        arch: ['x64', 'arm64']
-      }
-    ],
+    target: macTargets.map((target) => ({ target, arch: macArch })),
     icon: 'resources/icons/mac/icon.icns',
     hardenedRuntime: true,
-    identity: 'Anoop MD (W7LPPWA48L)',
     entitlements: 'resources/entitlements.mac.plist',
     entitlementsInherit: 'resources/entitlements.mac.plist',
     notarize: false,
-    requirements: 'resources/app-requirements.txt',
     protocols: [
       {
-        name: 'Bruno',
+        name: 'Zest',
         schemes: [
           'bruno'
         ]
@@ -76,7 +66,7 @@ const config = {
     ],
     protocols: [
       {
-        name: 'Bruno',
+        name: 'Zest',
         schemes: ['bruno']
       }
     ],
