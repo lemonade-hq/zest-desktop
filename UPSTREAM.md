@@ -40,6 +40,7 @@ Conflicts are expected here.
 | `packages/bruno-electron/src/app/about-bruno.js`, `menu-template.js` | about text and menu label | bootstrap |
 | `packages/bruno-app/rsbuild.config.mjs` | page / window title | bootstrap |
 | `package.json`, `package-lock.json`, `scripts/setup.js`, `eslint.config.js`, `.github/actions/common/setup-node-deps/action.yml` | `packages/zest-core` workspace wiring | bootstrap |
+| `.gitignore` | `packages/zest-core/dist` ignored — dist is built by `scripts/setup.js` and CI, never committed | zest-core auth port |
 | `.github/workflows/tests-linux.yml`, `tests-macos.yml`, `tests-windows.yml`, `benchmarks.yml` | every job guarded with `if: github.repository == 'usebruno/bruno'` (self-hosted runners, cost) | bootstrap |
 | `packages/bruno-electron/resources/icons/**` | Zest icons | branding task |
 | `packages/bruno-electron/src/ipc/network/prepare-request.js` | `lemonade-partner` / `lemonade-agent` auth | auth-mode tasks |
