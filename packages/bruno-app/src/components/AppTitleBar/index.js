@@ -12,7 +12,8 @@ import { sortWorkspaces, toggleWorkspacePin } from 'utils/workspaces';
 import { focusTab } from 'providers/ReduxStore/slices/tabs';
 import get from 'lodash/get';
 
-import Bruno from 'components/Bruno';
+import ZestMark from 'components/ZestMark';
+import { selectTitleBarMarkVariant } from 'src/selectors/zest-mark';
 import MenuDropdown from 'ui/MenuDropdown';
 import ActionIcon from 'ui/ActionIcon';
 import IconSidebarToggle from 'components/Icons/IconSidebarToggle';
@@ -41,6 +42,7 @@ export const getWorkspaceDisplayName = (name) => {
 
 const AppTitleBar = () => {
   const dispatch = useDispatch();
+  const markVariant = useSelector(selectTitleBarMarkVariant);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
   const osClass = getOsClass();
@@ -295,10 +297,10 @@ const AppTitleBar = () => {
           </MenuDropdown>
         </div>
 
-        {/* Center section: Bruno logo + text */}
+        {/* Center section: Zest logo + text */}
         <div className="titlebar-center">
-          <Bruno width={18} />
-          <span className="bruno-text">Bruno</span>
+          <ZestMark variant={markVariant} width={18} />
+          <span className="bruno-text">Zest</span>
         </div>
 
         {/* Right section: Action buttons */}

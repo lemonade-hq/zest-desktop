@@ -42,6 +42,12 @@ Conflicts are expected here.
 | `package.json`, `package-lock.json`, `scripts/setup.js`, `eslint.config.js`, `.github/actions/common/setup-node-deps/action.yml` | `packages/zest-core` workspace wiring | bootstrap |
 | `.github/workflows/tests-linux.yml`, `tests-macos.yml`, `tests-windows.yml`, `benchmarks.yml` | every job guarded with `if: github.repository == 'usebruno/bruno'` (self-hosted runners, cost) | bootstrap |
 | `packages/bruno-electron/resources/icons/**` | Zest icons | branding task |
+| `packages/bruno-electron/src/about/256x256.png`, `packages/bruno-electron/src/app/about-bruno.js` | Zest window icon; about window mark and "based on Bruno (MIT)" credit | branding task |
+| `packages/bruno-electron/src/index.js` (dev dock icon) | `app.dock.setIcon` in dev on macOS | branding task |
+| `packages/bruno-app/src/components/AppTitleBar/index.js`, `components/WelcomeModal/index.js`, `pages/ErrorBoundary/index.js` | `ZestMark` replaces the Bruno logo (title bar variant follows a `prod*` environment) | branding task |
+| User-facing strings in `packages/bruno-app/src/**` (Welcome, Preferences, Sidebar, ShareCollection, import/export modals, error panels, etc.; about 45 files) | "Bruno" → "Zest" in visible copy only. Identifiers, logs and `exportedUsing` stay. | branding task |
+| `tests/onboarding/welcome-modal.spec.ts`, `tests/collection/open/*.spec.ts` | follow the renamed strings | branding task |
+| `package.json`, `package-lock.json` | `sharp` and `png2icons` devDependencies, `icons:generate` script | branding task |
 | `packages/bruno-electron/src/ipc/network/prepare-request.js` | `lemonade-partner` / `lemonade-agent` auth | auth-mode tasks |
 | `packages/bruno-app/src/components/RequestPane/Auth/AuthMode/**` | new auth modes in the UI | auth-mode tasks |
 | `packages/bruno-schema/src/collections/index.js`, `packages/bruno-lang/v2/src/*.js`, `packages/bruno-filestore/src/formats/yml/common/auth.ts` | auth definitions in schema and both file formats | auth-mode tasks |
@@ -49,5 +55,6 @@ Conflicts are expected here.
 ## Kept as Bruno on purpose
 
 - The `bruno://` URL scheme (`src/index.js`, `utils/deeplink.js`): OAuth2 callbacks arrive as `bruno://app/oauth2/callback`.
+- `components/Bruno`, `pages/Bruno` (identifiers), the changelog tab's upstream release notes, and `Bruno/<version>` in exported files.
 - Directory and file names such as `packages/bruno-electron` and `about-bruno.js`.
 - Upstream workflows `lint-checks.yml`, `flaky-test-detector.yml`, `npm-bru-cli.yml` stay enabled.

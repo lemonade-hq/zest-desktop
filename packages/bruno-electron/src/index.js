@@ -207,6 +207,11 @@ app.on('ready', async () => {
 
   startBenchmark();
 
+  // Packaged builds get the dock icon from the .icns; in dev Electron would show its own.
+  if (isDev && process.platform === 'darwin') {
+    app.dock?.setIcon(path.join(__dirname, '../resources/icons/png/1024x1024.png'));
+  }
+
   if (isDev) {
     const { installExtension, REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer');
     try {
