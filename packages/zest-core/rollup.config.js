@@ -14,7 +14,7 @@ module.exports = [
       { file: packageJson.module, format: 'esm', sourcemap: true }
     ],
     plugins: [
-      peerDepsExternal(),
+      peerDepsExternal({ includeDependencies: true }),
       nodeResolve(),
       commonjs(),
       typescript({ tsconfig: './tsconfig.json', include: ['src/**/*'], exclude: ['src/**/*.spec.ts'] }),
