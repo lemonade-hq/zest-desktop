@@ -7,11 +7,10 @@
  * - `authPreset: 'lemonade'` sets the Lemonade auth default.
  */
 import { openApiToBruno } from '@usebruno/converters';
+import { LEMONADE_PARTNER_DEFAULTS } from 'utils/common/constants';
 import { flattenItems, isItemTransientRequest } from 'utils/collections';
 
-// TODO(lemonade-partner auth mode, task 23295e72 "Add the `lemonade-partner` auth mode to Zest Desktop"):
-// flip to true once the mode is merged, so requests from the Lemonade spec default to `lemonade-partner`.
-export const LEMONADE_AUTH_MODES_ENABLED = false;
+export const LEMONADE_AUTH_MODES_ENABLED = true;
 
 const HTTP_METHODS = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'];
 
@@ -68,7 +67,9 @@ export const buildRequestFromOperation = ({ spec, method, path, source, lemonade
 
   const { request } = item;
   const authMode = defaultAuthMode(source, { lemonadeAuthModesEnabled });
-  const auth = authMode ? { mode: authMode } : request.auth;
+  const auth = authMode === 'lemonade-partner'
+    ? { mode: authMode, lemonadePartner: { ...LEMONADE_PARTNER_DEFAULTS } }
+    : authMode ? { mode: authMode } : request.auth;
 
   return {
     name: item.name,

@@ -225,6 +225,15 @@ ${indentString(`password: ${auth?.wsse?.password || ''}`)}
 `;
   }
 
+  if (auth && auth.lemonadePartner) {
+    bru += `auth:lemonade-partner {
+${indentString(`env: ${auth?.lemonadePartner?.env || ''}`)}
+${indentString(`partnerPublicId: ${auth?.lemonadePartner?.partnerPublicId || ''}`)}
+}
+
+`;
+  }
+
   if (auth && auth.bearer) {
     bru += `auth:bearer {
 ${indentString(`token: ${auth?.bearer?.token || ''}`)}

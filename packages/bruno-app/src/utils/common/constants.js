@@ -59,6 +59,10 @@ export const SCOPE_LABEL = {
 
 export const COPY_SUCCESS_TIMEOUT = 1000;
 
+// Zest: what a new Lemonade Partner auth contains before the user edits it.
+export const LEMONADE_PARTNER_ENVIRONMENTS = ['staging', 'sandbox', 'production'];
+export const LEMONADE_PARTNER_DEFAULTS = Object.freeze({ env: '{{env}}', partnerPublicId: '{{partnerPublicId}}' });
+
 export const AUTH_MODES = {
   AWSV4: 'awsv4',
   BASIC: 'basic',
@@ -68,6 +72,7 @@ export const AUTH_MODES = {
   OAUTH1: 'oauth1',
   OAUTH2: 'oauth2',
   WSSE: 'wsse',
+  LEMONADE_PARTNER: 'lemonade-partner',
   APIKEY: 'apikey',
   NONE: 'none',
   INHERIT: 'inherit'

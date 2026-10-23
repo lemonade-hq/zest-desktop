@@ -385,6 +385,12 @@ const interpolateVars = (request, envVariables = {}, runtimeVariables = {}, proc
     request.wsse.password = _interpolate(request.wsse.password) || '';
   }
 
+  // interpolate vars for lemonade-partner auth
+  if (request.lemonadePartner) {
+    request.lemonadePartner.env = _interpolate(request.lemonadePartner.env) || '';
+    request.lemonadePartner.partnerPublicId = _interpolate(request.lemonadePartner.partnerPublicId) || '';
+  }
+
   // interpolate vars for ntlmConfig auth
   if (request.ntlmConfig) {
     request.ntlmConfig.username = _interpolate(request.ntlmConfig.username) || '';

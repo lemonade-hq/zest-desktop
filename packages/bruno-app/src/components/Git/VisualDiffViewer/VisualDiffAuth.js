@@ -10,8 +10,11 @@ const AUTH_TYPE_LABELS = {
   ntlm: 'NTLM',
   oauth2: 'OAuth 2.0',
   wsse: 'WSSE',
+  lemonadePartner: 'Lemonade Partner',
   apikey: 'API Key'
 };
+// The mode name (`lemonade-partner`) differs from its config key (`lemonadePartner`).
+AUTH_TYPE_LABELS['lemonade-partner'] = AUTH_TYPE_LABELS.lemonadePartner;
 
 const AUTH_FIELD_LABELS = {
   // AWS v4
@@ -25,6 +28,9 @@ const AUTH_FIELD_LABELS = {
   username: 'Username',
   password: 'Password',
   domain: 'Domain',
+  // Lemonade Partner
+  env: 'Environment',
+  partnerPublicId: 'Partner public ID',
   // Bearer
   token: 'Token',
   // API Key

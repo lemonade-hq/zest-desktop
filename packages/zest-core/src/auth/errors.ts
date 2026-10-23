@@ -21,6 +21,8 @@ export class AuthClientNotFoundError extends Error {
 /** `status` is null when the service answered, but not with a usable body, or did not answer at all. */
 export class UpstreamError extends Error {
   readonly status: number | null;
+  readonly service: 'partners-service' | 'auth-service' | 'public-apis';
+  readonly env: Environment;
 
   constructor(service: 'partners-service' | 'auth-service' | 'public-apis', env: Environment, status: number | null) {
     super(
@@ -30,6 +32,8 @@ export class UpstreamError extends Error {
     );
     this.name = 'UpstreamError';
     this.status = status;
+    this.service = service;
+    this.env = env;
   }
 }
 

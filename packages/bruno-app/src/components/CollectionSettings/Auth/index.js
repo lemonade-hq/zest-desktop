@@ -7,6 +7,7 @@ import BearerAuth from './BearerAuth';
 import BasicAuth from './BasicAuth';
 import DigestAuth from './DigestAuth';
 import WsseAuth from './WsseAuth';
+import LemonadePartnerAuth from './LemonadePartnerAuth';
 import ApiKeyAuth from './ApiKeyAuth/';
 import EdgeGridAuth from './EdgeGridAuth';
 import { saveCollectionSettings } from 'providers/ReduxStore/slices/collections/actions';
@@ -44,6 +45,9 @@ const Auth = ({ collection }) => {
       }
       case 'oauth2': {
         return <OAuth2 collection={collection} />;
+      }
+      case 'lemonade-partner': {
+        return <LemonadePartnerAuth collection={collection} />;
       }
       case 'wsse': {
         return <WsseAuth collection={collection} />;

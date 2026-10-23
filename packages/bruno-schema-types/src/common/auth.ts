@@ -17,6 +17,11 @@ export interface AuthWsse {
   password?: string | null;
 }
 
+export interface AuthLemonadePartner {
+  env?: string | null;
+  partnerPublicId?: string | null;
+}
+
 export interface AuthBearer {
   token?: string | null;
 }
@@ -122,7 +127,8 @@ export type AuthMode
     | 'oauth2'
     | 'wsse'
     | 'apikey'
-    | 'akamai-edgegrid';
+    | 'akamai-edgegrid'
+    | 'lemonade-partner';
 
 export interface Auth {
   mode: AuthMode;
@@ -134,6 +140,7 @@ export interface Auth {
   oauth1?: AuthOauth1 | null;
   oauth2?: OAuth2 | null;
   wsse?: AuthWsse | null;
+  lemonadePartner?: AuthLemonadePartner | null;
   apikey?: AuthApiKey | null;
   akamaiEdgegrid?: AkamaiEdgeGridAuthValues | null;
 }

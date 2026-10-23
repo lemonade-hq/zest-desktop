@@ -45,6 +45,11 @@ Conflicts are expected here.
 | `packages/bruno-electron/resources/icons/**` | Zest icons | branding task |
 | `packages/bruno-electron/src/ipc/network/prepare-request.js` | `lemonade-partner` / `lemonade-agent` auth | auth-mode tasks |
 | `packages/bruno-app/src/components/RequestPane/Auth/AuthMode/**` | new auth modes in the UI | auth-mode tasks |
+| `packages/bruno-electron/src/ipc/network/index.js`, `packages/bruno-electron/src/ipc/network/interpolate-vars.js`, `packages/bruno-electron/src/index.js` | `lemonade-partner`: token minted in `configureRequest`, `{{vars}}` interpolated, `registerZestIpc` | lemonade-partner |
+| `packages/bruno-app/src/components/CollectionSettings/Auth/AuthMode/index.js`, `packages/bruno-app/src/components/CollectionSettings/Auth/index.js`, `packages/bruno-app/src/components/FolderSettings/AuthMode/index.js`, `packages/bruno-app/src/components/FolderSettings/Auth/index.js`, `packages/bruno-app/src/components/RequestPane/Auth/AuthFields/index.js` | Lemonade Partner dropdown entry, form and production badge at collection, folder and request level | lemonade-partner |
+| `packages/bruno-app/src/components/Git/VisualDiffViewer/VisualDiffAuth.js` | label for the `lemonadePartner` auth block in diffs | lemonade-partner |
+| `packages/bruno-app/src/providers/ReduxStore/slices/collections/index.js`, `packages/bruno-app/src/utils/collections/index.js`, `packages/bruno-app/src/utils/common/constants.js` | `lemonade-partner` auth reducers, export transform, label, defaults | lemonade-partner |
+| `packages/bruno-schema-types/src/common/auth.ts` | `AuthLemonadePartner` type and mode | lemonade-partner |
 | `packages/bruno-schema/src/collections/index.js`, `packages/bruno-lang/v2/src/*.js`, `packages/bruno-filestore/src/formats/yml/common/auth.ts` | auth definitions in schema and both file formats | auth-mode tasks |
 | `packages/bruno-electron/electron-builder-config.js` | `resources/data/zest` (bundled public-apis snapshot) in `extraResources` | public-apis spec task |
 | `packages/bruno-electron/src/index.js` | registers `ipc/zest-api-specs.js` | public-apis spec task |

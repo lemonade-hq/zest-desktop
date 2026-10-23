@@ -103,4 +103,30 @@ describe('Request Schema Validation', () => {
     const isValid = await requestSchema.validate(request);
     expect(isValid).toBeTruthy();
   });
+
+  it('request schema must validate successfully - lemonade-partner auth', async () => {
+    const request = {
+      url: '{{publicApis}}/api/v3/fr/renters/applications',
+      method: 'POST',
+      headers: [],
+      params: [],
+      body: { mode: 'none' },
+      auth: { mode: 'lemonade-partner', lemonadePartner: { env: '{{env}}', partnerPublicId: '{{partnerPublicId}}' } }
+    };
+
+    expect(await requestSchema.validate(request)).toBeTruthy();
+  });
+
+  it('request schema must reject an unknown auth mode', async () => {
+    const request = {
+      url: 'https://example.com',
+      method: 'GET',
+      headers: [],
+      params: [],
+      body: { mode: 'none' },
+      auth: { mode: 'lemonade-agent' }
+    };
+
+    await expect(requestSchema.validate(request)).rejects.toBeTruthy();
+  });
 });

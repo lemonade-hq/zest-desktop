@@ -107,6 +107,15 @@ ${indentString(`password: ${auth.basic.password}`)}
 `;
   }
 
+  if (auth && auth.lemonadePartner) {
+    bru += `auth:lemonade-partner {
+${indentString(`env: ${auth.lemonadePartner.env || ''}`)}
+${indentString(`partnerPublicId: ${auth.lemonadePartner.partnerPublicId || ''}`)}
+}
+
+`;
+  }
+
   if (auth && auth.wsse) {
     bru += `auth:wsse {
 ${indentString(`username: ${auth.wsse.username}`)}

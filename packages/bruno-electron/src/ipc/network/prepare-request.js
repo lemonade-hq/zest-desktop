@@ -64,6 +64,13 @@ const setAuthHeaders = (axiosRequest, request, collectionRoot) => {
           includeBodyHash: get(collectionAuth, 'oauth1.includeBodyHash')
         };
         break;
+      case 'lemonade-partner':
+        // Minted in configureRequest, once {{env}} and {{partnerPublicId}} are interpolated.
+        axiosRequest.lemonadePartner = {
+          env: get(collectionAuth, 'lemonadePartner.env', '{{env}}'),
+          partnerPublicId: get(collectionAuth, 'lemonadePartner.partnerPublicId', '{{partnerPublicId}}')
+        };
+        break;
       case 'wsse':
         const username = get(collectionAuth, 'wsse.username', '');
         const password = get(collectionAuth, 'wsse.password', '');
@@ -329,6 +336,13 @@ const setAuthHeaders = (axiosRequest, request, collectionRoot) => {
             };
             break;
         }
+        break;
+      case 'lemonade-partner':
+        // Minted in configureRequest, once {{env}} and {{partnerPublicId}} are interpolated.
+        axiosRequest.lemonadePartner = {
+          env: get(request, 'auth.lemonadePartner.env', '{{env}}'),
+          partnerPublicId: get(request, 'auth.lemonadePartner.partnerPublicId', '{{partnerPublicId}}')
+        };
         break;
       case 'wsse':
         const username = get(request, 'auth.wsse.username', '');

@@ -15,9 +15,13 @@ const snapshot = JSON.parse(fs.readFileSync(
 const lemonadeSource = { url: 'https://public-apis-master.lmndstaging.com/api-json', baseUrlVariable: 'publicApis', authPreset: 'lemonade' };
 
 describe('defaultAuthMode', () => {
-  it('is inherit while the lemonade-* auth modes are not merged', () => {
-    expect(LEMONADE_AUTH_MODES_ENABLED).toBe(false);
-    expect(defaultAuthMode(lemonadeSource)).toBe('inherit');
+  it('is lemonade-partner by default now that the mode is merged', () => {
+    expect(LEMONADE_AUTH_MODES_ENABLED).toBe(true);
+    expect(defaultAuthMode(lemonadeSource)).toBe('lemonade-partner');
+  });
+
+  it('is inherit while the switch is off', () => {
+    expect(defaultAuthMode(lemonadeSource, { lemonadeAuthModesEnabled: false })).toBe('inherit');
   });
 
   it('is lemonade-partner once the auth modes are enabled', () => {
@@ -41,17 +45,20 @@ describe('buildRequestFromOperation', () => {
 
     expect(request.method).toBe('POST');
     expect(request.url).toBe('{{publicApis}}/api/v3/us/car/applications');
-    expect(request.auth).toEqual({ mode: 'inherit' });
+    expect(request.auth).toEqual({
+      mode: 'lemonade-partner',
+      lemonadePartner: { env: '{{env}}', partnerPublicId: '{{partnerPublicId}}' }
+    });
     expect(request.body.mode).toBe('json');
     expect(JSON.parse(request.body.json)).toEqual(expect.any(Object));
     expect(request.name).toBeTruthy();
   });
 
-  it('uses lemonade-partner when the switch is on', () => {
+  it('uses inherit when the switch is off', () => {
     const request = buildRequestFromOperation({
-      spec: snapshot, method: 'post', path: '/api/v3/us/car/applications', source: lemonadeSource, lemonadeAuthModesEnabled: true
+      spec: snapshot, method: 'post', path: '/api/v3/us/car/applications', source: lemonadeSource, lemonadeAuthModesEnabled: false
     });
-    expect(request.auth).toEqual({ mode: 'lemonade-partner' });
+    expect(request.auth).toEqual({ mode: 'inherit' });
   });
 
   it('keeps {{baseUrl}} and the converter auth for a plain spec', () => {
